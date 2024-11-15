@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { clearAuthToken, setAuthToken } from '../../utils/auth';
 import { postData } from '../../api/apiService';
 
@@ -36,7 +36,8 @@ const Login: React.FC = () => {
       const response = await postData('/api/v1/auth/signin', values);
 
       // Store the token in sessionStorage
-      setAuthToken(response);
+      setAuthToken(response.data);
+
       // setIsLoggedIn('true');
 
       // Navigate to the dashboard
@@ -105,12 +106,17 @@ const Login: React.FC = () => {
                 />
               </div>
               <div className='error text-center' id='failed'></div>
-              <button
-                type='submit'
-                className='btn btn-primary btn-sm col-6 m-4  align-items-center'
-              >
-                Submit
-              </button>
+              <div className='row'>
+
+                <button
+                  type='submit'
+
+                  className='btn  btn-small col-3 m-4 w-50 align-items-center'
+                >
+                  Submit
+                </button>
+                <Link className='col-3 m-4 d-flex align-items-center' to="/reset-password">Click here to reset your password</Link>
+              </div>
             </div>
           </Form>
         </Formik>

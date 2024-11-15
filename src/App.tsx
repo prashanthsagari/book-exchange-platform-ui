@@ -9,8 +9,9 @@ import Dashboard from './pages/Dashboard';
 import Contact from './components/Contact/Contact';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import Home from './components/Home';
-import Registration from './pages/Registration/Registration';
+import Registration from './pages/Registration/UserRegistration';
 import Profile from './components/Profile/Profile';
+import PasswordResetComponent from './components/PasswordResetComponent/PasswordResetComponent';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/reset-password" element={<PasswordResetComponent />} />
           <Route path='/*' element={<PageNotFound />} />
         </Routes>
       </div>

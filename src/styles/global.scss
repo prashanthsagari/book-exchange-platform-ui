@@ -1,5 +1,6 @@
 body,
-html, .page-wrapper {
+html,
+.page-wrapper {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -56,17 +57,28 @@ html, .page-wrapper {
   // padding: 20px;
   // overflow-y: auto;
 
-  margin-top: 100px; /* Offset for the fixed header */
-  margin-bottom: 60px; /* Offset for the fixed footer */
+  margin-top: 100px;
+  /* Offset for the fixed header */
+  margin-bottom: 60px;
+  /* Offset for the fixed footer */
   padding: 20px;
-  height: calc(100vh - 120px); /* Adjust the height to account for header and footer */
-  overflow-y: auto; /* Allow vertical scrolling */
+  height: calc(100vh - 120px);
+  /* Adjust the height to account for header and footer */
+  overflow-y: auto;
+  /* Allow vertical scrolling */
 }
+
 /* Optionally, add styling for header and footer */
-.header h1, .footer p {
+.header h1,
+.footer p {
   margin: 0;
 }
 
+.no-underline {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: inherit;
+}
 
 // .center-content {
 //   margin-top: auto;

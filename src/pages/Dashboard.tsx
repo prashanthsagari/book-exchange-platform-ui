@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAuthData } from '../api/apiService';
 import { Card, Col, Container, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
   // State variables for storing books data and loading/error states
@@ -8,39 +9,49 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [isLoggedIn, setIsLoggedIn] = useState<string | null>('false');
+
+  const [isLoggedIn] = useState(() => {
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    return isLoggedIn;
+  });
+
 
   const [userInfo] = useState(() => {
     const savedUserInfo = sessionStorage.getItem('userInfo');
     return savedUserInfo ? JSON.parse(savedUserInfo) : null;
   });
 
-  // const navigate = useNavigate();
-  // useEffect hook to fetch data when the component mounts
+  const navigate = useNavigate();
   useEffect(() => {
-    if (isLoggedIn) {
-      const fetchBooks = async () => {
+    const fetchBooks = async () => {
+      if (isLoggedIn) {
         try {
           const response = await getAuthData(`/api/v1/book?userId=${userInfo.id}`);
-
+  
           if (!response) {
             throw new Error('Failed to fetch books');
           }
-
-          setBooks(response); // Store the fetched books data in the state
+          debugger;
+          setBooks(response.data); // Store the fetched books data in the state
           setLoading(false); // Set loading to false after data is loaded
         } catch (err: any) {
           setError(err.message); // Handle errors and set error state
           setLoading(false); // Set loading to false on error
         }
-      };
-      fetchBooks(); // Call the fetchBooks function
-      setIsLoggedIn('true');
-    } else {
-      // Navigate to the dashboard
-      // navigate('/login');
+      } else {
+        // Navigate to the login page
+        navigate('/login');
+      }
+    };
+  
+    debugger;
+    // Check if `isLoggedIn` has a value before calling the API
+    if (isLoggedIn !== null && isLoggedIn !== undefined) {
+      fetchBooks();
     }
-  }, []); // Dependency array to fetch data whenever userId changes
+  }, [isLoggedIn]); // Add `isLoggedIn` as a dependency
+  
+ 
 
   // Render the component based on the loading/error states
   if (loading) {
@@ -57,7 +68,7 @@ const Dashboard: React.FC = () => {
         isLoggedIn ? (
 
           <div>
-            <h3>Books for User {userInfo.username}</h3>
+            <h3 className='text-center'>Books from :  <span className="fs-6">{userInfo.username}</span></h3>
             <Container>
               <Row>
                 {books.length > 0 ? (

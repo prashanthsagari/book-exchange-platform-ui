@@ -40,7 +40,7 @@ const Registration: React.FC = () => {
     const handleSubmit = async (values: any) => {
         try {
             delete values.confirmPassword;
-            alert(JSON.stringify(values));
+
             // Simulate an API call for login
             const response = await postData('/api/v1/auth/signup', values);
             console.log('Response:', response.data);
