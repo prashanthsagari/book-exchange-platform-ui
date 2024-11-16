@@ -5,7 +5,7 @@ import { clearAuthToken } from '../../utils/auth';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
 
   // const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
 
@@ -13,6 +13,8 @@ const Header: React.FC = () => {
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     return isLoggedIn;
   });
+
+  const username = sessionStorage.userInfo ? JSON.parse(sessionStorage.userInfo)?.username : '';
 
   const handleLogout = () => {
     clearAuthToken();
@@ -65,18 +67,28 @@ const Header: React.FC = () => {
               )}
 
               {isLoggedIn === 'true' ? (
+                <Nav.Link className='m-3 text-decoration-none' as={Link} to='/add-book'>
+                  Create Book
+                </Nav.Link>
+              ) : (
+                ''
+              )}
+
+              {isLoggedIn === 'true' ? (
+                <Nav.Link className='m-3 text-decoration-none' as={Link} to='/books'>
+                  Show Books
+                </Nav.Link>
+              ) : (
+                ''
+              )}
+
+              {isLoggedIn === 'true' ? (
                 <Nav.Link className='m-3 text-decoration-none' as={Link} to='/profile'>
                   Profile
                 </Nav.Link>
               ) : (
                 ''
               )}
-
-
-
-              <Nav.Link className='m-3 text-decoration-none' as={Link} to='/contact'>
-                Contact Us
-              </Nav.Link>
 
               {isLoggedIn == 'true' ? (
                 <Nav.Link
@@ -94,15 +106,28 @@ const Header: React.FC = () => {
                 </Nav.Link>
               ) : (
                 <Nav.Link className='m-3 text-decoration-none' as={Link} to='/login'
-                style={{
-                  color: '#3cd993',
-                  fontWeight: 'bold',
-                  textAlign: 'right'
-                }}>
+                  style={{
+                    color: '#3cd993',
+                    fontWeight: 'bold',
+                    textAlign: 'right'
+                  }}>
                   Login
                 </Nav.Link>
               )}
             </Nav>
+
+            {isLoggedIn === 'true' ? (
+              <span className='m-3 text-decoration-none text-align-end' style={{
+                color: '#3cd993',
+                fontWeight: 'bold',
+                textAlign: 'right'
+              }}>
+                {username}
+              </span>
+            ) : (
+              ''
+            )}
+
           </Navbar.Collapse>
         </Container>
       </Navbar>

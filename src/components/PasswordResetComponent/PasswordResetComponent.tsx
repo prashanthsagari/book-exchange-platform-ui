@@ -8,30 +8,20 @@ import { Link } from "react-router-dom";
 
 interface PasswordResetFormValues {
     username: string;
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
+    email: string;
 }
 
 
 const initialValues: PasswordResetFormValues = {
     username: "",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
+    email: "",
 };
 
 // Define the Yup validation schema
 const validationSchema = Yup.object({
-    currentPassword: Yup.string()
-        .required("Current password is required"),
-    newPassword: Yup.string()
-        .min(6, "Password must be at least 6 characters")
-        .max(40, "Password must be at most 40 characters")
-        .required("New password is required"),
-    confirmPassword: Yup.string()
-        .oneOf([Yup.ref("newPassword")], "Passwords must match")
-        .required("Confirm password is required"),
+    email: Yup.string()
+        .email('Invalid email format')
+        .required('Email is required')
 });
 
 const PasswordResetComponent: React.FC = () => {
@@ -41,11 +31,11 @@ const PasswordResetComponent: React.FC = () => {
             // Make the API call
             const response = await putData('/api/v1/auth/reset-password', {
                 username: values.username,
-                currentPassword: values.currentPassword,
-                newPassword: values.newPassword,
+                email: values.email
             });
 
             if (response.status === 200) {
+                alert(response.data);
                 setStatus({ successMessage: "Password has been successfully reset." });
                 setTimeout(() => {
                     resetForm();
@@ -86,39 +76,15 @@ const PasswordResetComponent: React.FC = () => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="currentPassword">Current Password</label>
+                            <label htmlFor="email">Registered Email</label>
                             <Field
-                                type="password"
-                                id="currentPassword"
-                                name="currentPassword"
-                                placeholder="Enter current password"
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter registered email"
                                 className="form-control"
                             />
-                            <ErrorMessage name="currentPassword" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="newPassword">New Password</label>
-                            <Field
-                                type="password"
-                                id="newPassword"
-                                name="newPassword"
-                                placeholder="Enter new password"
-                                className="form-control"
-                            />
-                            <ErrorMessage name="newPassword" component="div" className="error" />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="confirmPassword">Confirm New Password</label>
-                            <Field
-                                type="password"
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                placeholder="Confirm new password"
-                                className="form-control"
-                            />
-                            <ErrorMessage name="confirmPassword" component="div" className="error" />
+                            <ErrorMessage name="email" component="div" className="error" />
                         </div>
 
                         {status && status.errorMessage && (

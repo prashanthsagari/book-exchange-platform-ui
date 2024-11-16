@@ -7,10 +7,7 @@ const jwtToken = sessionStorage.getItem('token');
 const checkToken = () => {
   const jwtToken = sessionStorage.getItem('token');
   if (!jwtToken) {
-    // Optionally handle the error (e.g., redirect to login)
     console.error('JWT token is missing. Please log in.');
-    // You can redirect the user to the login page if needed
-    // window.location.href = '/login';
     return false;
   }
   return true;
@@ -50,7 +47,6 @@ export const getData = async (url: string) => {
 
 // GET Auth Request
 export const getAuthData = async (url: string) => {
-  debugger;
   if (!checkToken()) return;
   const response = await apiAuthClient.get(url);
   return response;
@@ -63,10 +59,10 @@ export const postAuthData = async (url: string, data: any) => {
   return response;
 };
 
-// PUT Auth Request
-export const deleteAuthData = async (url: string, data: any) => {
+// Delete Auth Request
+export const deleteAuthData = async (url: string) => {
   if (!checkToken()) return;
-  const response = await apiAuthClient.delete(url, data);
+  const response = await apiAuthClient.delete(url);
   return response;
 };
 
@@ -79,14 +75,12 @@ export const putAuthData = async (url: string, data: any) => {
 
 // POST Request
 export const postData = async (url: string, data: any) => {
-  debugger;
   const response = await apiClient.post(url, data);
   return response;
 };
 
 // PUT Request
 export const putData = async (url: string, data: any) => {
-  debugger;
   const response = await apiClient.put(url, data);
   return response;
 };

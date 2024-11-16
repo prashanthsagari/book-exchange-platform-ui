@@ -1,65 +1,64 @@
-import React, { useState } from 'react'
-import './Profile.scss'
+import React, { useState } from 'react';
+import './Profile.scss';
 import { putAuthData } from '../../api/apiService';
 import { Alert } from 'react-bootstrap';
-
-// // Define the types for the user profile
-// interface UserProfile {
-//     username: string;
-//     email: string;
-//     phone: string;
-// }
-
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Profile: React.FC = () => {
-
     const [userInfo] = useState(() => {
         const savedUserInfo = sessionStorage.getItem('userInfo');
         return savedUserInfo ? JSON.parse(savedUserInfo) : null;
     });
 
-
-    const initialUser: any = {
-        username: userInfo.username,
-        email: userInfo.email,
-        phone: userInfo.phone
+    const initialUser = {
+        username: userInfo?.username || '',
+        email: userInfo?.email || '',
+        phone: userInfo?.phone || '',
+        currentPassword: '',
+        newPassword: '',
     };
 
     // State for user data and edit mode
-    const [user, setUser] = useState<any>(initialUser);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [editedUser, setEditedUser] = useState<any>(initialUser);
+    const [user, setUser] = useState(initialUser);
+    const [isEditing, setIsEditing] = useState(false);
 
     // State to handle success message visibility
     const [showSuccess, setShowSuccess] = useState(false);
 
-    // Handle input changes in the form
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setEditedUser({
-            ...editedUser,
-            [name]: value,
-        });
-    };
+    // Yup validation schema
+    const validationSchema = Yup.object({
+        email: Yup.string()
+            .email('Invalid email format')
+            .required('Email is required'),
+        phone: Yup.string()
+            .matches(/^[0-9]{10}$/, 'Phone must be exactly 10 digits')
+            .required('Phone is required'),
+        currentPassword: Yup.string()
+            .min(6, 'Password must be at least 6 characters')
+            .required('Password confirmation is required'),
+        newPassword: Yup.string()
+            .min(6, 'Password must be at least 6 characters')
+            .required('Password is required'),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+            .required('Password confirmation is required'),
+
+    });
 
     // Toggle edit mode
     const toggleEditMode = () => {
         setIsEditing(!isEditing);
-        setEditedUser(user); // Reset the edited fields to the current user data
     };
 
     // Save edited user data
-    const saveChanges = async () => {
+    const saveChanges = async (values: typeof initialUser) => {
         try {
-            setUser(editedUser);
-            // alert(JSON.stringify(editedUser));
-
-            // const books = await getAuthData('/api/v1/book-mgmt/books');
-            // alert(JSON.stringify(books));
-
-            // Simulate an API call for login
-            await putAuthData('/api/v1/profile/update', editedUser);
+            setUser(values);
+            // Simulate an API call for profile update
+            await putAuthData('/api/v1/profile/update', values);
             setIsEditing(false);
+
             // Show success message
             setShowSuccess(true);
 
@@ -67,35 +66,31 @@ const Profile: React.FC = () => {
             setTimeout(() => {
                 setShowSuccess(false);
             }, 3000);
-
         } catch (error: any) {
-            console.error("API Error:", error);
+            console.error('API Error:', error);
+            var issue = document.getElementById('failed');
+            if (issue !== null && issue !== undefined) {
+                issue.textContent = error?.response?.data?.message || 'An error occurred';
+            }
         }
     };
 
-
-
-
     return (
         <>
-            {/* {userInfo ? (
-        <>
-          <p>Username: {userInfo.username}</p>
-          <p>ID: {userInfo.id}</p>
-          
-        </>
-      ) : (
-        <p>No user info available</p>
-      )} */}
-
             {/* Show success message if showSuccess is true */}
             {showSuccess && (
-                <Alert variant="success" onClose={() => setShowSuccess(false)} dismissible style={{
-                    width: '300px', // Set the width of the alert
-                    height: '50px', // Set the height of the alert
-                    border: '1px solid #28a745', // Border color matching success theme
-                    padding: '10px', // Adjust padding if needed
-                }}>
+                <Alert
+                    variant="success"
+                    onClose={() => setShowSuccess(false)}
+                    dismissible
+                    style={{
+                        width: '300px',
+                        height: '50px',
+                        border: '1px solid #28a745',
+                        padding: '10px',
+                        margin: '0 auto'
+                    }}
+                >
                     <Alert.Heading>Success!</Alert.Heading>
                     <p>User details updated successfully.</p>
                 </Alert>
@@ -103,47 +98,130 @@ const Profile: React.FC = () => {
 
             <div className="profile-page">
                 <div className="profile-container">
-                    {/* <div className="profile-picture">
-                        <img src={user.profilePicture} alt={`${user.username}'s profile`} />
-                    </div> */}
-
                     {isEditing ? (
-                        // Edit form view
-                        <div className="profile-edit-form">
-
-                            <input
-                                type="email"
-                                name="email"
-                                value={editedUser.email}
-                                onChange={handleInputChange}
-                                placeholder="Email"
-                            />
-                            <input
-                                type="text"
-                                name="phone"
-                                value={editedUser.phone}
-                                onChange={handleInputChange}
-                                placeholder="Phone"
-                            />
-
-                            <div className="button-group">
-                                <button className="save-button" onClick={saveChanges}>Save</button>
-                                <button className="cancel-button" onClick={toggleEditMode}>Cancel</button>
-                            </div>
-                        </div>
+                        // Edit form view with Formik
+                        <Formik
+                            initialValues={user}
+                            validationSchema={validationSchema}
+                            onSubmit={saveChanges}
+                        >
+                            {({ isSubmitting }) => (
+                                <Form className="profile-edit-form">
+                                    <div>
+                                        <label htmlFor="username">Username:</label>
+                                        <Field
+                                            id="username"
+                                            name="username"
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div>
+                                        <Field
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email"
+                                            className="form-control"
+                                        />
+                                        <ErrorMessage
+                                            name="email"
+                                            component="div"
+                                            className="error-message"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Field
+                                            type="text"
+                                            name="phone"
+                                            placeholder="Phone"
+                                            className="form-control"
+                                        />
+                                        <ErrorMessage
+                                            name="phone"
+                                            component="div"
+                                            className="error-message"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Field
+                                            type="password"
+                                            name="currentPassword"
+                                            placeholder="Current Password"
+                                            className="form-control"
+                                        />
+                                        <ErrorMessage
+                                            name="currentPassword"
+                                            component="div"
+                                            className="error-message"
+                                        />
+                                    </div>
+                                    <div className='error text-center' id='failed'></div>
+                                    <div>
+                                        <Field
+                                            type="password"
+                                            name="newPassword"
+                                            placeholder="newPassword"
+                                            className="form-control"
+                                        />
+                                        <ErrorMessage
+                                            name="newPassword"
+                                            component="div"
+                                            className="error-message"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Field
+                                            type="password"
+                                            name="confirmPassword"
+                                            placeholder="confirmPassword"
+                                            className="form-control"
+                                        />
+                                        <ErrorMessage
+                                            name="confirmPassword"
+                                            component="div"
+                                            className="error-message"
+                                        />
+                                    </div>
+                                    <div className="button-group">
+                                        <button
+                                            type="submit"
+                                            className="save-button"
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? 'Saving...' : 'Save'}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="cancel-button"
+                                            onClick={toggleEditMode}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </Form>
+                            )}
+                        </Formik>
                     ) : (
                         // Display view
                         <div className="profile-info">
                             <h2>{user.username}</h2>
-                            <p><strong>Email:</strong> {user.email}</p>
-                            <p><strong>Phone:</strong> {user.phone}</p>
-                            <button className="edit-button" onClick={toggleEditMode}>Edit Profile</button>
+                            <p>
+                                <strong>Email:</strong> {user.email}
+                            </p>
+                            <p>
+                                <strong>Phone:</strong> {user.phone}
+                            </p>
+                            <button
+                                className="edit-button"
+                                onClick={toggleEditMode}
+                            >
+                                Edit Profile
+                            </button>
                         </div>
                     )}
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Profile
+export default Profile;

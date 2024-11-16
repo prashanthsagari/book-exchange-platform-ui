@@ -31,11 +31,10 @@ const Dashboard: React.FC = () => {
           if (!response) {
             throw new Error('Failed to fetch books');
           }
-          debugger;
           setBooks(response.data); // Store the fetched books data in the state
           setLoading(false); // Set loading to false after data is loaded
         } catch (err: any) {
-          setError(err.message); // Handle errors and set error state
+          setError(err?.response?.data?.message || "An error occurred. Please try again."); // Handle errors and set error state
           setLoading(false); // Set loading to false on error
         }
       } else {
@@ -44,7 +43,6 @@ const Dashboard: React.FC = () => {
       }
     };
   
-    debugger;
     // Check if `isLoggedIn` has a value before calling the API
     if (isLoggedIn !== null && isLoggedIn !== undefined) {
       fetchBooks();

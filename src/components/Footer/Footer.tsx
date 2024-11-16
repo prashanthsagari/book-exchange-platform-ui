@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
 
     return (
         <footer className="footer">
-            <p>© {currentYear} Book Exchange Platform. All rights reserved.</p>
+            <p className='font-monospace'>© {currentYear} Book Exchange Platform. Developed by Prashanth Sagari sagari.prashanth@gmail.com</p>
         </footer>
     );
 };

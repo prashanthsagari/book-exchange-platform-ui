@@ -34,25 +34,32 @@ const Login: React.FC = () => {
     try {
       // Simulate an API call for login
       const response = await postData('/api/v1/auth/signin', values);
+      debugger;
+      if (response.status === 404) {
+        var issue = document.getElementById('failed');
+        if (issue !== null && issue !== undefined) {
+          issue.textContent = response?.data?.message || 'An error occurred';
+        }
+      } else {
+        // Store the token in sessionStorage
+        setAuthToken(response.data);
 
-      // Store the token in sessionStorage
-      setAuthToken(response.data);
+        // setIsLoggedIn('true');
 
-      // setIsLoggedIn('true');
+        // Navigate to the dashboard
+        navigate('/dashboard');
+      }
 
-      // Navigate to the dashboard
-      navigate('/dashboard');
+
     } catch (error: any) {
-      var ab = document.getElementById('failed');
-      if (ab !== null && ab !== undefined) {
-        ab.textContent = error?.response?.data?.message || 'An error occurred';
-        ab.textContent += " " + error?.response?.data?.status || 'Error';
+      var issue = document.getElementById('failed');
+      if (issue !== null && issue !== undefined) {
+
+        issue.textContent = error?.response?.data?.message || 'An error occurred';
+        issue.textContent += " " + error?.response?.data?.status || 'Error';
       }
       console.error("API Error:", error);
       clearAuthToken();
-      // setIsLoggedIn('false');
-      // const history = createBrowserHistory();
-      // history.go(0);
       navigate('/login');
     }
   };
@@ -106,16 +113,16 @@ const Login: React.FC = () => {
                 />
               </div>
               <div className='error text-center' id='failed'></div>
-              <div className='row'>
+              <div className='row d-flex justify-content-center'>
 
                 <button
                   type='submit'
 
-                  className='btn  btn-small col-3 m-4 w-50 align-items-center'
+                  className='btn btn-small col-12 align-items-center'
                 >
                   Submit
                 </button>
-                <Link className='col-3 m-4 d-flex align-items-center' to="/reset-password">Click here to reset your password</Link>
+                <Link className='text-center col-12' to="/reset-password">Account Recovery</Link>
               </div>
             </div>
           </Form>

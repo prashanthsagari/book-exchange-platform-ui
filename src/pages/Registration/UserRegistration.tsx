@@ -1,10 +1,12 @@
-import { ErrorMessage, Field, Formik, Form } from 'formik'
-import React, { useState } from 'react'
+import { ErrorMessage, Field, Formik, Form } from 'formik';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
+import './UserRegistration.scss';
 import { postData } from '../../api/apiService';
 import { Link } from 'react-router-dom';
 
-const validationSchema = Yup.object().shape({
+// Validation schema for the form
+const validationSchema = Yup.object({
     username: Yup.string()
         .min(3, 'Name must be at least 3 characters')
         .required('Name is required'),
@@ -20,160 +22,88 @@ const validationSchema = Yup.object().shape({
         .required('Phone number is required'),
 });
 
-
+// Initial values for the form fields
+const initialValues = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
+};
 
 const Registration: React.FC = () => {
     const [submitted, setSubmitted] = useState(false);
 
-    let initialValues = {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        phone: ''
-    };
 
-
-    // write your validation logic here
-
-
+    // Handle form submission
     const handleSubmit = async (values: any) => {
         try {
-            delete values.confirmPassword;
-
-            // Simulate an API call for login
-            const response = await postData('/api/v1/auth/signup', values);
-            console.log('Response:', response.data);
-            alert('User Registered.');
-            setSubmitted(true);
-
-
+            delete values.confirmPassword; // Remove confirmPassword before sending to API
+            await postData('/api/v1/auth/signup', values);
+            setSubmitted(true); // Update the state on successful submission
         } catch (error: any) {
-            alert('NOT REGITSTER');
             console.error('Error:', error);
+            var issue = document.getElementById('failed');
+            if (issue !== null && issue !== undefined) {
+                issue.textContent = error?.response?.data?.message || 'An error occurred';
+            }
         }
     };
 
-
-
+    // InputField Component to reduce duplication
+    const InputField = ({ label, name, type }: any) => (
+        <div className='col-sm-12 col-md-6 form-group mx-sm-3 mb-4'>
+            <label htmlFor={name} className='col-6 m-2'>
+                {label}:
+            </label>
+            <Field
+                type={type}
+                name={name}
+                id={name}
+                className='col-6 form-control'
+            />
+            <ErrorMessage name={name} component='div' className='error text-center' />
+        </div>
+    );
 
     return (
-        <>
-            <div className='border border-primary'>
-                <h3 className='text-center mt-4'>User Registration Form </h3>
-                {submitted === false ? (
-                    <Formik
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                    >
-                        <Form>
-                            <div className='row justify-content-md-center align-items-center'>
-                                <div className='col-sm-12 col-md-6 form-group mx-sm-3 mb-4'>
-                                    <label htmlFor='username' className='col-4 m-2'>
-                                        User Name:
-                                    </label>
-                                    <Field
-                                        type='text'
-                                        name='username'
-                                        id='username'
-                                        className='col-6'
-                                    />
-                                    <ErrorMessage
-                                        name='username'
-                                        component='div'
-                                        className='error text-center'
-                                    />
-                                </div>
+        <div className='border border-primary'>
+            <h3 className='text-center mt-4'>User Registration Form</h3>
+            {submitted === false ? (
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    <Form>
+                        <div className='row justify-content-md-center align-items-center'>
+                            {/* Reusable Input Fields */}
+                            <InputField label="User Name" name="username" type="text" />
+                            <InputField label="Email" name="email" type="email" />
+                            <InputField label="Password" name="password" type="password" />
+                            <InputField label="Confirm Password" name="confirmPassword" type="password" />
+                            <InputField label="Phone" name="phone" type="text" />
 
-                                <div className='col-sm-12 col-md-6 form-group mx-sm-3 mb-4'>
-                                    <label htmlFor='email' className='col-4 m-2'>
-                                        Email:
-                                    </label>
-                                    <Field
-                                        type='email'
-                                        name='email'
-                                        id='email'
-                                        className='col-6'
-                                    />
-                                    <ErrorMessage
-                                        name='email'
-                                        component='div'
-                                        className='error text-center'
-                                    />
-                                </div>
-
-                                <div className='col-sm-12 col-md-6 form-group mx-sm-3 mb-4'>
-                                    <label htmlFor='password' className='col-4 m-2'>
-                                        Password:
-                                    </label>
-                                    <Field
-                                        type='password'
-                                        name='password'
-                                        id='password'
-                                        className='col-6'
-                                    />
-                                    <ErrorMessage
-                                        name='password'
-                                        component='div'
-                                        className='error text-center'
-                                    />
-                                </div>
-
-                                <div className='col-sm-12 col-md-6 form-group mx-sm-3 mb-4'>
-                                    <label htmlFor='confirmPassword' className='col-4 m-2'>
-                                        Confirm Password:
-                                    </label>
-                                    <Field
-                                        type='password'
-                                        name='confirmPassword'
-                                        id='confirmPassword'
-                                        className='col-6'
-                                    />
-                                    <ErrorMessage
-                                        name='confirmPassword'
-                                        component='div'
-                                        className='error text-center'
-                                    />
-                                </div>
-
-                                <div className='col-sm-12 col-md-6 form-group mx-sm-3 mb-4'>
-                                    <label htmlFor='phone' className='col-4 m-2'>
-                                        Phone:
-                                    </label>
-                                    <Field
-                                        type='text'
-                                        name='phone'
-                                        id='phone'
-                                        className='col-6'
-                                    />
-                                    <ErrorMessage
-                                        name='phone'
-                                        component='div'
-                                        className='error text-center'
-                                    />
-                                </div>
-
-                                <button
-                                    type='submit'
-                                    className='btn btn-primary btn-sm col-6 m-4  align-items-center'
-                                >
+                            {/* Submit Button */}
+                            <div className='d-flex justify-content-center'>
+                                <button type='submit' className='btn w-100'>
                                     Submit
                                 </button>
                             </div>
-                        </Form>
-                    </Formik>
-                ) : (
-                    <div className='success text-center'>
-                        User Registered Successfully.{' '}
-                        <Link className='m-3' to='/login'>
-                            Go to Login
-                        </Link>
-                    </div>
-                )}
-            </div>
-        </>
-    )
-}
+                            <div className='error text-center' id='failed'></div>
+                        </div>
+                    </Form>
+                </Formik>
+            ) : (
+                <div className='success text-center'>
+                    User Registered Successfully.{' '}
+                    <Link className='m-3' to='/login'>
+                        Go to Login
+                    </Link>
+                </div>
+            )}
+        </div>
+    );
+};
 
-export default Registration
+export default Registration;

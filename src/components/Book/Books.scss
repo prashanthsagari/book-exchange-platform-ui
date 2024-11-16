@@ -1,0 +1,160 @@
+// Books.scss
+
+// General Layout
+.list-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+// Search Container
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-input-container {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-container {
+    margin-right: 10px;
+}
+
+button.btn {
+    width: auto;
+}
+
+.search-input {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    width: 200px;
+}
+
+.search-btn {
+    background-color: #d9534f;
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 8px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #c9302c;
+    }
+}
+
+.btnShowAll {
+    background-color: #d9534f;
+    border: none;
+    color: white;
+    padding: 10px 23px 1px 16px !important;
+    &:hover {
+        background-color: #c9302c;
+    }
+}
+
+// Table Styles
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.book-heading {
+    background-color: #f8f9fa;
+    text-align: left;
+    font-weight: bold;
+}
+
+.book-heading th {
+    padding: 12px;
+}
+
+.book-data td {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+}
+
+// Action Buttons
+.action-btn {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.edit-icon {
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+    color: #007bff;
+
+    &:hover {
+        color: #0056b3;
+    }
+}
+
+.exchange-btn,
+.exchanged-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #5bc0de;
+    color: white;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #31b0d5;
+    }
+}
+
+.exchanged-btn {
+    background-color: #d9534f;
+
+    &:hover {
+        background-color: #c9302c;
+    }
+}
+
+.exchange-icon {
+    margin-left: 5px;
+}
+
+// Pagination
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-item a {
+    color: #007bff;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+
+    &:hover {
+        background-color: #f1f1f1;
+    }
+}
+
+.active a {
+    background-color: #007bff;
+    color: white;
+}
