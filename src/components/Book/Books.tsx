@@ -79,7 +79,6 @@ const Books: React.FC = () => {
                     userId: userObj.id
                 }
             );
-            debugger;
             setBookExchanged(result?.data);
             fetchBooksList();
         } catch (error) {

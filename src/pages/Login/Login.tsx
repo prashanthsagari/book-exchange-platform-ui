@@ -21,7 +21,6 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: { username: string; password: string }) => {
     try {
       const response = await postData('/api/v1/auth/signin', values);
-      debugger;
       if (response.status === 404) {
         var issue = document.getElementById('failed');
         if (issue !== null && issue !== undefined) {
@@ -39,7 +38,7 @@ const Login: React.FC = () => {
       var issue = document.getElementById('failed');
       if (issue !== null && issue !== undefined) {
 
-        issue.textContent = error?.response?.data?.message || 'An error occurred';
+        issue.textContent = error?.response?.data?.message || 'Service is down 503';
         issue.textContent += " " + error?.response?.data?.status || 'Error';
       }
       console.error("API Error:", error);
