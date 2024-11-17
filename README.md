@@ -1,4 +1,4 @@
-# 📚 React App Setup Guide
+# 📚 Book Exchange Platform App Setup Guide
 
 Welcome to Book Exchange Platform! This guide will walk you through the steps to clone the repository, install dependencies, and run the application locally.
 
@@ -14,10 +14,11 @@ You can check if these are installed by running:
 ```bash
 node -v
 npm -v
+```
 
 
-## Install dependencies
+### Install dependencies
 npm install
 
-## Run application
+### Run application
 npm run start
