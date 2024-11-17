@@ -55,13 +55,10 @@ const Profile: React.FC = () => {
     const saveChanges = async (values: typeof initialUser) => {
         try {
             setUser(values);
-            // Simulate an API call for profile update
             await putAuthData('/api/v1/profile/update', values);
             setIsEditing(false);
-
             // Show success message
             setShowSuccess(true);
-
             // Hide success message after 3 seconds
             setTimeout(() => {
                 setShowSuccess(false);

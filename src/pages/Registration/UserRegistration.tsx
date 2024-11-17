@@ -40,7 +40,7 @@ const Registration: React.FC = () => {
         try {
             delete values.confirmPassword; // Remove confirmPassword before sending to API
             await postData('/api/v1/auth/signup', values);
-            setSubmitted(true); // Update the state on successful submission
+            setSubmitted(true); 
         } catch (error: any) {
             console.error('Error:', error);
             var issue = document.getElementById('failed');

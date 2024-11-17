@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { clearAuthToken } from '../../utils/auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -122,7 +124,9 @@ const Header: React.FC = () => {
                 fontWeight: 'bold',
                 textAlign: 'right'
               }}>
-                {username}
+
+                <FontAwesomeIcon icon={faUser} />&nbsp;
+                Welcome {username.toUpperCase()}
               </span>
             ) : (
               ''

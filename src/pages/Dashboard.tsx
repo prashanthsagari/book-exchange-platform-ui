@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
     const fetchBooks = async () => {
       if (isLoggedIn) {
         try {
-          const response = await getAuthData(`/api/v1/book?userId=${userInfo.id}`);
+          const response = await getAuthData(`/api/v1/books/user?userId=${userInfo.id}`);
   
           if (!response) {
             throw new Error('Failed to fetch books');
@@ -66,7 +66,7 @@ const Dashboard: React.FC = () => {
         isLoggedIn ? (
 
           <div>
-            <h3 className='text-center'>Books from :  <span className="fs-6">{userInfo.username}</span></h3>
+            <h3 className='text-center'>Books from :  <span className="font-italic text-success fs-5 text-uppercase font-weight-bold">{userInfo.username}</span></h3>
             <Container>
               <Row>
                 {books.length > 0 ? (

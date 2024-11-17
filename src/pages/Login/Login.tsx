@@ -16,23 +16,10 @@ const LoginSchema = Yup.object().shape({
 
 const Login: React.FC = () => {
 
-
-  // const [setIsLoggedIn] = useState<string | null>('false');
-  // const [data, setData] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   const navigate = useNavigate();
 
   const handleSubmit = async (values: { username: string; password: string }) => {
     try {
-      // Simulate an API call for login
       const response = await postData('/api/v1/auth/signin', values);
       debugger;
       if (response.status === 404) {
@@ -43,9 +30,6 @@ const Login: React.FC = () => {
       } else {
         // Store the token in sessionStorage
         setAuthToken(response.data);
-
-        // setIsLoggedIn('true');
-
         // Navigate to the dashboard
         navigate('/dashboard');
       }

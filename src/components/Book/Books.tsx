@@ -13,8 +13,10 @@ const Books: React.FC = () => {
     const navigate = useNavigate();
 
     const [bookList, setBookList] = useState<any[]>([]);
-    const [setDeletedBook] = useState<any>(null);
-    const [setBookExchanged] = useState<any>(null);
+    // @ts-ignore
+    const [deletedBook, setDeletedBook] = useState<any>(null);
+    // @ts-ignore
+    const [bookExchanged, setBookExchanged] = useState<any>(null);
     const [searchValue, setSearchValue] = useState<string>("");
     const [searchFilterValue, setSearchFilterValue] = useState<string>("Title");
     const [showAllBookFlag, setShowAllBookFlag] = useState<boolean>(false);
@@ -27,7 +29,7 @@ const Books: React.FC = () => {
     // Fetch books and handle pagination
     const fetchBooksList = useCallback(async () => {
         const url = showAllBookFlag
-            ? `/api/v1/book?userId=${userObj.id}`
+            ? `/api/v1/books/user?userId=${userObj.id}`
             : "/api/v1/books";
         try {
             const response = await getAuthData(url);
@@ -77,6 +79,7 @@ const Books: React.FC = () => {
                     userId: userObj.id
                 }
             );
+            debugger;
             setBookExchanged(result?.data);
             fetchBooksList();
         } catch (error) {
