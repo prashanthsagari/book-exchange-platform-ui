@@ -9,7 +9,28 @@ Before you begin, ensure you have the following installed on your system:
 - **Node.js** (v16 or later recommended)
 - **npm** (v8 or later)
 
-You can check if these are installed by running:
+### Project Structure 
+
+<pre>
+├───public
+└───src
+    ├───api
+    ├───assets
+    ├───components
+    │   ├───Book
+    │   ├───Footer
+    │   ├───Header
+    │   ├───PageNotFound
+    │   ├───PasswordResetComponent
+    │   └───Profile
+    ├───pages
+    │   ├───Login
+    │   └───Registration
+    ├───styles
+    └───utils
+</pre>
+
+### You can check if these are installed by running:
 
 ```bash
 node -v
@@ -17,8 +38,11 @@ npm -v
 ```
 
 
-### Install dependencies
+### Install dependencies and run app
+```bash
 npm install
 
 ### Run application
 npm run start
+```
+
