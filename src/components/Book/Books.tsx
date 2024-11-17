@@ -51,6 +51,7 @@ const Books: React.FC = () => {
         try {
             const result = await deleteAuthData(`/api/v1/book/${book.id}?userId=${userObj.id}`)
             setDeletedBook(result?.data);
+            fetchBooksList();
         } catch (error: any) {
             alert(error?.response?.data?.message || "An error occurred. Please try again.")
             console.error("Error deleting book:", error);
